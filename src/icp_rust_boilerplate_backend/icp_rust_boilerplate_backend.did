@@ -1,3 +1,31 @@
+type Campaign = record {
+  id : nat64;
+  raised_amount : nat64;
+  title : text;
+  updated_at : opt nat64;
+  creator : text;
+  description : text;
+  created_at : nat64;
+  goal_amount : nat64;
+};
+type CampaignPayload = record {
+  title : text;
+  creator : text;
+  description : text;
+  goal_amount : nat64;
+};
+type DonationPayload = record { amount : nat64; campaign_id : nat64 };
+type Error = variant {
+  NotEnoughFunds : record { msg : text };
+  NotFound : record { msg : text };
+  SizeExceeded : record { msg : text };
+};
+type Result = variant { Ok : Campaign; Err : Error };
+type Result_1 = variant { Ok : text; Err : Error };
 service : {
-    "greet": (text) -> (text) query;
+  create_campaign : (CampaignPayload) -> (Result);
+  delete_campaign : (nat64) -> (Result);
+  donate_to_campaign : (DonationPayload) -> (Result_1);
+  get_campaign : (nat64) -> (Result) query;
+  update_campaign : (nat64, CampaignPayload) -> (Result);
 }
